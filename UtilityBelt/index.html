@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UtilityBelt &mdash; Documentation</title>
+<style>
+  :root {
+    --bg: #0f1115; --surface: #161a21; --surface2: #1d222b; --border: #272d38;
+    --text: #e6e9ef; --muted: #9aa3b2; --accent: #ffd23a;
+    --accent2: color-mix(in srgb, var(--accent) 70%, #ffffff);
+    --accent-dim: color-mix(in srgb, var(--accent) 22%, #11141a);
+    --green: #3dba60; --orange: #e0a44f; --mono: 'Consolas','SFMono-Regular',monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; line-height: 1.6; font-size: 15px; }
+  a { color: var(--accent2); text-decoration: none; } a:hover { text-decoration: underline; }
+  code { font-family: var(--mono); background: #11141a; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #d7dbe6; }
+  pre { background: #0c0e12; border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+
+  .hero { padding: 56px 0 40px; background: radial-gradient(1200px 400px at 20% -10%, color-mix(in srgb, var(--accent) 30%, transparent), transparent), var(--surface); border-bottom: 1px solid var(--border); }
+  .hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+  .hero-badge { display: inline-block; background: var(--accent-dim); color: var(--accent2); padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: .5px; }
+  .hero h1 { font-size: 40px; margin: 18px 0 8px; line-height: 1.1; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: var(--muted); max-width: 720px; font-size: 16px; }
+  .badges { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .badge { background: #11141a; border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 13px; color: var(--muted); }
+  .badge strong { color: var(--text); }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+  .two-col { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
+  .sidebar { position: sticky; top: 20px; padding-top: 32px; }
+  .sidebar nav h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin: 0 0 10px; }
+  .sidebar nav a { display: block; padding: 5px 0; color: var(--muted); font-size: 14px; }
+  .sidebar nav a:hover { color: var(--text); text-decoration: none; }
+  .content { padding: 32px 0 80px; min-width: 0; }
+  section { margin-bottom: 44px; }
+  h2 { font-size: 26px; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 18px; margin: 26px 0 10px; }
+
+  table.t { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+  table.t th, table.t td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.t th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+  table.t tr:hover td { background: #12151b; }
+  .tbl-wrap { overflow-x: auto; }
+  .node { font-family: var(--mono); color: var(--accent2); font-size: 13px; white-space: nowrap; }
+  .tag { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; white-space: nowrap; }
+  .tag.call { background: #3a2a12; color: var(--orange); }
+  .tag.pure { background: #123a1e; color: var(--green); }
+  .tag.evt  { background: #16314f; color: #8cc4ff; }
+  .tag.cls  { background: #2a1f3a; color: #b79cff; }
+  .tag.asset { background: #1f2a2a; color: #7fd6cf; }
+
+  .box { border: 1px solid var(--border); border-left: 3px solid var(--accent); background: var(--surface); border-radius: 6px; padding: 14px 16px; margin: 16px 0; }
+  .box.tip { border-left-color: var(--green); }
+  .box.warn { border-left-color: var(--orange); }
+  .box > strong:first-child { display: block; margin-bottom: 4px; }
+  ol.steps { padding-left: 20px; } ol.steps li { margin: 8px 0; }
+  ul.feat { padding-left: 20px; } ul.feat li { margin: 6px 0; }
+  footer { border-top: 1px solid var(--border); padding: 28px 40px; text-align: center; color: var(--muted); font-size: 13px; }
+  @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } .sidebar { position: static; } .wrap, .hero-inner { padding: 0 20px; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Plugin Documentation</div>
+    <h1>UtilityBelt<br><span>Gameplay and UI helpers that every project ends up writing</span></h1>
+    <p>Input-method detection, gamepad-friendly focusable widgets and menus, live input prompts, typewriter text, easing, maths, balanced randomisation, actor pooling, light flicker, a smoother spring arm and editor visualisation &mdash; in one Blueprint and C++ library.</p>
+    <div class="badges"><div class="badge">v1.0</div><div class="badge">UE <strong>5.8</strong></div><div class="badge">Win64 <em>(verified)</em> &middot; Linux, Mac</div><div class="badge">Category <strong>Code Utilities</strong></div><div class="badge">Alpha XP</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="two-col">
+  <aside class="sidebar"><nav><h3>Contents</h3>
+      <a href="#overview">Overview</a>
+      <a href="#requirements">Requirements</a>
+      <a href="#install">Installation</a>
+      <a href="#quickstart">Quick start</a>
+      <a href="#settings">Settings</a>
+      <a href="#subsystem">Input &amp; game subsystem</a>
+      <a href="#theme">UI theme &amp; prompts</a>
+      <a href="#focus">Focusable widgets</a>
+      <a href="#menus">Menu system</a>
+      <a href="#options">Options &amp; tabs</a>
+      <a href="#text">Text &amp; progress widgets</a>
+      <a href="#gameplay">Gameplay helpers</a>
+      <a href="#maths">Maths, easing &amp; random</a>
+      <a href="#debug">Debug &amp; editor helpers</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+      <a href="#credits">Credits</a>
+  </nav></aside>
+  <main class="content">
+    <section id="overview"><h2>Overview</h2>
+      <p>UtilityBelt is a general-purpose helper library for gameplay and UI programmers. It solves the problems that come up in almost every project &mdash; knowing whether the player is on mouse, keyboard or gamepad, making UMG menus navigable with a controller, showing the right button prompt, typing out dialogue, easing values, pooling actors &mdash; so you can use tested building blocks instead of rewriting them.</p>
+      <ul class="feat">
+        <li><strong>Input-method detection</strong> per local player with events when the player switches between mouse, keyboard and gamepad.</li>
+        <li><strong>Focusable widgets</strong>: button, check box, slider, user widget and panel classes that use their Hovered style when focused and raise focus events.</li>
+        <li><strong>Menu stack</strong>: hierarchical menus with back/close keys, automatic focus and input-mode / pause / pointer handling.</li>
+        <li><strong>Input prompts</strong>: an image widget and a rich-text <code>&lt;input .../&gt;</code> decorator that always show the binding for the active device (Enhanced Input or legacy input).</li>
+        <li><strong>Typewriter text</strong>, option selectors, tab lists, a smoothly changing progress bar and stylable subtitle widgets.</li>
+        <li><strong>Gameplay helpers</strong>: actor pooling, light flicker component, smooth spring arm, runtime-resizable NavMesh bounds, replicated physics actor, render-target pool.</li>
+        <li><strong>Maths</strong>: easing functions, cone/convex/2D geometry helpers, balanced (Halton) random streams and shuffle bags.</li>
+        <li><strong>Editor helpers</strong>: an always-visible debug visualisation component and a data-table row picker locked to one table.</li>
+      </ul>
+    </section>
+
+    <section id="requirements"><h2>Requirements</h2><div class="tbl-wrap"><table class="t"><thead><tr><th>Requirement</th><th>Details</th></tr></thead><tbody>
+      <tr><td class="node">Unreal Engine</td><td>5.8 (verified clean)</td></tr>
+      <tr><td class="node">Modules</td><td><code>UtilityBelt</code> (Runtime), <code>UtilityBeltTypewriter</code> (Runtime, typewriter text widget), <code>UtilityBeltEditor</code> (Editor)</td></tr>
+      <tr><td class="node">Dependencies</td><td>Engine plugins <strong>Enhanced Input</strong> and <strong>Paper2D</strong> (enabled automatically with UtilityBelt)</td></tr>
+      <tr><td class="node">Language</td><td>Blueprints and C++</td></tr>
+      <tr><td class="node">Platforms</td><td>Win64, Linux, Mac (the plugin's platform list). Win64 is built and verified by Alpha XP; Linux and Mac are supported by the code, not verified by Alpha XP.</td></tr>
+    </tbody></table></div></section>
+
+    <section id="install"><h2>Installation</h2>
+      <ol class="steps">
+        <li>Install UtilityBelt from the launcher into your engine, or copy the <code>UtilityBelt</code> folder into your project's <code>Plugins</code> folder.</li>
+        <li>For a C++ project, regenerate project files and build the editor target.</li>
+        <li>Open the project, go to <em>Edit &gt; Plugins</em>, enable <strong>UtilityBelt</strong> and restart the editor. Enhanced Input and Paper2D are enabled with it.</li>
+        <li>To use the C++ API, add the module to your <code>.Build.cs</code>: <code>PrivateDependencyModuleNames.Add("UtilityBelt");</code>. The typewriter text widget lives in its own runtime module; add <code>"UtilityBeltTypewriter"</code> as well if your C++ code uses <code>UTypewriterTextWidget</code> (Blueprints need nothing extra).</li>
+      </ol>
+      <div class="box tip"><strong>Verifying the install</strong>In any Blueprint graph, right-click and search for <span class="node">Get Last Input Mode Used</span> (under <em>Belt Game Subsystem</em>). In the UMG palette you should see <em>Focusable Button</em>, <em>Input Image</em> and the other UtilityBelt widgets.</div>
+    </section>
+
+    <section id="quickstart"><h2>Quick start</h2>
+      <h3>Blueprint: react to the player's input method</h3>
+      <ol class="steps">
+        <li>In a widget or actor Blueprint, add the <em>Belt Game Subsystem</em> node (Game Instance Subsystem getter).</li>
+        <li>Drag off it and bind to <span class="node">On Input Mode Changed</span>; the event gives you the player index and the new <code>EInputMode</code> (Mouse, Keyboard, Gamepad).</li>
+        <li>Query the current state at any time with <span class="node">Get Last Input Mode Used</span> or <span class="node">Last Input Was Game Pad</span>.</li>
+        <li>For prompts, place an <span class="node">UInputImage</span> in a widget, set its <em>Binding Type</em> to Enhanced Input Action and pick an action &mdash; it switches between keyboard and gamepad art automatically (requires a UI theme, see <a href="#theme">UI theme &amp; prompts</a>).</li>
+      </ol>
+      <h3>C++</h3>
+<pre><code>#include "UtilityBelt.h"            // GetBeltGameSubsystem()
+#include "BeltEasings.h"
+
+void AMyHUDActor::BeginPlay()
+{
+    Super::BeginPlay();
+    if (UBeltGameSubsystem* GS = GetBeltGameSubsystem(GetWorld()))
+    {
+        GS-&gt;OnInputModeChanged.AddDynamic(this, &amp;AMyHUDActor::HandleInputModeChanged);
+        const EInputMode Mode = GS-&gt;GetLastInputModeUsed(0);
+        UE_LOG(LogTemp, Log, TEXT("Gamepad active: %d"), Mode == EInputMode::Gamepad);
+    }
+}
+
+// UFUNCTION() void HandleInputModeChanged(int PlayerIndex, EInputMode NewMode);
+void AMyHUDActor::HandleInputModeChanged(int PlayerIndex, EInputMode NewMode)
+{
+    const float Eased = UBeltEasings::EaseAlpha(0.25f, EBeltEaseFunction::EaseOut_Back);
+    // ...
+}</code></pre>
+    </section>
+
+    <section id="settings"><h2>Settings</h2>
+      <p><em>Project Settings &gt; Engine &gt; UtilityBelt</em> (class <code>UBeltPluginSettings</code>, saved to <code>Config/DefaultEngine.ini</code>):</p>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Setting (C++ name)</th><th>Default</th><th>Description</th></tr></thead><tbody>
+        <tr><td><code>bHideMouseWhenGamepadUsed</code> (Hide Mouse When Gamepad Used)</td><td>true</td><td>Moves the pointer off-screen and hides it when the player switches to a gamepad.</td></tr>
+        <tr><td><code>EnhancedInputActionSearchDirectories</code> (Directories to search for Enhanced Input Actions)</td><td>empty</td><td>Content folders searched when an Enhanced Input action is referenced by name, e.g. <code>&lt;input eaction="IA_Jump"/&gt;</code>.</td></tr>
+      </tbody></table></div>
+      <p>The default UI theme is configured in <code>Config/DefaultGame.ini</code> (restart the editor after changing it):</p>
+<pre><code>[/Script/UtilityBelt.BeltGameSubsystem]
+DefaultUiThemePath="/Game/UI/DefaultUiTheme.DefaultUiTheme"</code></pre>
+      <p>For the cursor to stay hidden during gamepad navigation, set <em>Project Settings &gt; Engine &gt; General Settings &gt; Game Viewport Client Class</em> to <code>BeltGameViewportClientBase</code> (or a subclass).</p>
+    </section>
+
+    <section id="subsystem"><h2>Input &amp; game subsystem</h2>
+      <p><code>UBeltGameSubsystem</code> is a Game Instance Subsystem; in Blueprints search for <em>Belt Game Subsystem</em>. In C++ use <code>GetBeltGameSubsystem(UWorld*)</code> from <code>UtilityBelt.h</code>.</p>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+        <tr><td class="node">Get Last Input Mode Used</td><td><span class="tag call">Callable</span></td><td>Device (Mouse / Keyboard / Gamepad) of the most recent input of any kind for a player index.</td></tr>
+        <tr><td class="node">Get Last Input Button Pressed</td><td><span class="tag call">Callable</span></td><td>Device of the most recent button or key press (ignores axis movement).</td></tr>
+        <tr><td class="node">Get Last Input Axis Moved</td><td><span class="tag call">Callable</span></td><td>Device of the most recent axis movement (ignores button presses).</td></tr>
+        <tr><td class="node">Last Input Was Game Pad</td><td><span class="tag call">Callable</span></td><td>True when the last input of any kind came from a gamepad.</td></tr>
+        <tr><td class="node">Get Input Image Sprite</td><td><span class="tag call">Callable</span></td><td>Paper2D sprite for an action, axis or explicit key, using the device preference and an optional theme.</td></tr>
+        <tr><td class="node">Register Interest In Enhanced Input Action</td><td><span class="tag call">Callable</span></td><td>Bind an Enhanced Input action/trigger so that <em>On Enhanced Input Action Triggered</em> fires for it (useful from UI).</td></tr>
+        <tr><td class="node">Unregister All Interest In Enhanced Input Actions</td><td><span class="tag call">Callable</span></td><td>Remove every binding made with the node above (e.g. after loading a new level).</td></tr>
+        <tr><td class="node">Notify Enhanced Input Mappings Changed</td><td><span class="tag call">Callable</span></td><td>Legacy: re-broadcasts <em>On Enhanced Input Mappings Changed</em> after a short delay. No longer required.</td></tr>
+        <tr><td class="node">Move Mouse Off Screen</td><td><span class="tag call">Callable</span></td><td>Parks (and optionally hides) the pointer so it cannot trigger hovers during gamepad navigation.</td></tr>
+        <tr><td class="node">On Input Mode Changed</td><td><span class="tag evt">Event</span></td><td>Player index and new main input mode.</td></tr>
+        <tr><td class="node">On Button Input Mode Changed</td><td><span class="tag evt">Event</span></td><td>Raised when the device of the last button press changes.</td></tr>
+        <tr><td class="node">On Axis Input Mode Changed</td><td><span class="tag evt">Event</span></td><td>Raised when the device of the last axis movement changes.</td></tr>
+        <tr><td class="node">On Enhanced Input Action Triggered</td><td><span class="tag evt">Event</span></td><td>Action and trigger event for actions registered with <em>Register Interest In Enhanced Input Action</em>.</td></tr>
+        <tr><td class="node">On Enhanced Input Mappings Changed</td><td><span class="tag evt">Event</span></td><td>Legacy event raised by <em>Notify Enhanced Input Mappings Changed</em>.</td></tr>
+        <tr><td class="node">On Window Foreground Changed</td><td><span class="tag evt">Event</span></td><td>The game window gained or lost the foreground.</td></tr>
+        <tr><td class="node">On Viewport Resized</td><td><span class="tag evt">Event</span></td><td>New viewport width and height (also raised on fullscreen toggle).</td></tr>
+        <tr><td class="node">UBeltGameViewportClientBase</td><td><span class="tag cls">Class</span></td><td>Game viewport client that suppresses the cursor while a gamepad is in use.</td></tr>
+      </tbody></table></div>
+      <p>Enums: <code>EInputMode</code>, <code>EInputModeChange</code>, <code>EMousePointerVisibilityChange</code>, <code>EGamePauseChange</code>, <code>EInputBindingType</code> (Action, Axis, Key, EnhancedInputAction), <code>EInputImageDevicePreference</code>.</p>
+    </section>
+
+    <section id="theme"><h2>UI theme &amp; prompts</h2>
+      <p>Prompt images come from a <code>UUiTheme</code> data asset that references two Data Tables of row type <code>FKeySprite</code> (<em>Key</em> + Paper2D <em>Sprite</em>): <em>Keyboard Mouse Images</em> and <em>Xbox Controller Images</em>. Create the theme with <em>Add &gt; Miscellaneous &gt; Data Asset &gt; UiTheme</em>, set it as the default (see <a href="#settings">Settings</a>) and make sure it is cooked (Asset Manager primary asset or a Primary Asset Label).</p>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+        <tr><td class="node">UUiTheme</td><td><span class="tag cls">Class</span></td><td>Data asset holding the keyboard/mouse and gamepad sprite tables.</td></tr>
+        <tr><td class="node">FKeySprite</td><td><span class="tag cls">Class</span></td><td>Data Table row: <code>Key</code> and <code>Sprite</code>. Row names are key names (e.g. <code>Gamepad_FaceButton_Bottom</code>).</td></tr>
+        <tr><td class="node">UInputImage</td><td><span class="tag cls">Class</span></td><td>Image widget that shows the current binding. Properties: Binding Type, Action Or Axis Name, Input Action, Device Preference, Key, Update Delay, Override Hidden State, Player Index, Custom Theme.</td></tr>
+        <tr><td class="node">Set From Action</td><td><span class="tag call">Callable</span></td><td>Show the binding of a legacy input action.</td></tr>
+        <tr><td class="node">Set From Axis</td><td><span class="tag call">Callable</span></td><td>Show the binding of a legacy input axis.</td></tr>
+        <tr><td class="node">Set From Key</td><td><span class="tag call">Callable</span></td><td>Show a specific key, button or axis.</td></tr>
+        <tr><td class="node">Set From Input Action</td><td><span class="tag call">Callable</span></td><td>Show the binding of an Enhanced Input action.</td></tr>
+        <tr><td class="node">Get Binding Type</td><td><span class="tag call">Callable</span></td><td>Current binding type.</td></tr>
+        <tr><td class="node">Get Action Or Axis Name</td><td><span class="tag call">Callable</span></td><td>Action/axis name used for lookup.</td></tr>
+        <tr><td class="node">Get Key</td><td><span class="tag call">Callable</span></td><td>Explicit key used when Binding Type is Key.</td></tr>
+        <tr><td class="node">URichTextBlockInputImageDecorator</td><td><span class="tag cls">Class</span></td><td>Rich Text decorator: add it to a Rich Text Block's decorator classes to use the <code>&lt;input/&gt;</code> tag below.</td></tr>
+      </tbody></table></div>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Markup</th><th>Shows</th></tr></thead><tbody>
+        <tr><td><code>&lt;input eaction="IA_Jump"/&gt;</code></td><td>Enhanced Input action, looked up in the configured search directories</td></tr>
+        <tr><td><code>&lt;input action="Fire"/&gt;</code></td><td>Legacy input action</td></tr>
+        <tr><td><code>&lt;input axis="MoveForward"/&gt;</code></td><td>Legacy input axis</td></tr>
+        <tr><td><code>&lt;input key="F1"/&gt;</code></td><td>A specific key, button or axis (any <code>EKeys</code> name)</td></tr>
+      </tbody></table></div>
+      <p>Optional attributes: <code>player="1"</code>, <code>width="32"</code>, <code>height="32"</code>, <code>prefer="auto|gkm|gmk|gmkbutton|gmkaxis"</code>.</p>
+    </section>
+
+    <section id="focus"><h2>Focusable widgets</h2>
+      <p>These UMG widgets highlight themselves with their <em>Hovered</em> style while they have keyboard/gamepad focus. Set <em>Project Settings &gt; User Interface &gt; Render Focus Rule</em> to <em>Never</em> to hide the engine's dotted focus outline. Common properties: <em>Use Hover Style When Focussed</em>, <em>Take Focus On Hover</em>, <em>Lose Focus On Unhover</em>.</p>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+        <tr><td class="node">UFocusableButton</td><td><span class="tag cls">Class</span></td><td>Button with focus events and focus styling.</td></tr>
+        <tr><td class="node">Simulate Press</td><td><span class="tag call">Callable</span></td><td>Press the button visually and logically (as if Accept was pressed).</td></tr>
+        <tr><td class="node">Simulate Release</td><td><span class="tag call">Callable</span></td><td>Release a simulated press.</td></tr>
+        <tr><td class="node">Refresh Focussed Style</td><td><span class="tag call">Callable</span></td><td>Rebuild the focus style after changing the widget style at runtime (button, check box and slider; overridable).</td></tr>
+        <tr><td class="node">On Focus Received</td><td><span class="tag evt">Event</span></td><td>The widget gained focus (button, check box, slider).</td></tr>
+        <tr><td class="node">On Focus Lost</td><td><span class="tag evt">Event</span></td><td>The widget lost focus (button, check box, slider).</td></tr>
+        <tr><td class="node">UFocusableCheckBox</td><td><span class="tag cls">Class</span></td><td>Check box with focus styling, gamepad navigation and hover/focus events.</td></tr>
+        <tr><td class="node">UFocusableSlider</td><td><span class="tag cls">Class</span></td><td>Slider with focus styling and hover/focus events.</td></tr>
+        <tr><td class="node">On Hovered</td><td><span class="tag evt">Event</span></td><td>Mouse entered (check box, slider).</td></tr>
+        <tr><td class="node">On Unhovered</td><td><span class="tag evt">Event</span></td><td>Mouse left (check box, slider).</td></tr>
+        <tr><td class="node">UFocusableUserWidget</td><td><span class="tag cls">Class</span></td><td>User widget base with optional automatic focus by priority (<em>Enable Automatic Focus</em>, <em>Automatic Focus Priority</em>).</td></tr>
+        <tr><td class="node">Set Focus Properly</td><td><span class="tag call">Callable</span></td><td>Overridable focus entry point (the engine's SetFocus is not virtual).</td></tr>
+        <tr><td class="node">Is Requesting Focus</td><td><span class="tag call">Callable</span></td><td>Overridable: whether this widget currently wants focus.</td></tr>
+        <tr><td class="node">Take Focus If Desired</td><td><span class="tag call">Callable</span></td><td>Overridable: take focus if requesting it.</td></tr>
+        <tr><td class="node">UFocusablePanel</td><td><span class="tag cls">Class</span></td><td>Focusable user widget that delegates focus to a child (<em>Initial Focus Widget Name</em>) and can remember the last focused child.</td></tr>
+        <tr><td class="node">Set Focus To Initial Widget</td><td><span class="tag call">Callable</span></td><td>Focus the initial child.</td></tr>
+        <tr><td class="node">Get Initial Focus Widget</td><td><span class="tag evt">Event</span></td><td>Overridable: supply the initial focus child dynamically.</td></tr>
+        <tr><td class="node">Set Initial Focus Widget</td><td><span class="tag call">Callable</span></td><td>Set the initial focus child at runtime.</td></tr>
+        <tr><td class="node">Save Previous Focus</td><td><span class="tag call">Callable</span></td><td>Remember the currently focused child.</td></tr>
+        <tr><td class="node">Restore Previous Focus</td><td><span class="tag call">Callable</span></td><td>Re-focus the remembered child.</td></tr>
+        <tr><td class="node">UFocusableInputInterceptorUserWidget</td><td><span class="tag cls">Class</span></td><td>Focusable user widget that sees key presses before UMG consumes them (base of menu stacks and tab lists).</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="menus"><h2>Menu system</h2>
+      <ol class="steps">
+        <li>Create a Widget Blueprint, reparent it to <span class="node">UMenuStack</span> and add a <em>Named Slot</em> called <code>MenuContainer</code> where menus appear.</li>
+        <li>Create one Widget Blueprint per menu level, reparented to <span class="node">UMenuBase</span>; set <em>Initial Focus Widget Name</em> and, if wanted, <em>Input Mode Setting</em>, <em>Mouse Pointer Visibility</em> and <em>Game Pause Setting</em>.</li>
+        <li>Create the stack and call <span class="node">Push Menu By Class</span>; call <span class="node">Close</span> on a level (or <span class="node">Pop Menu</span>) to go back. Escape and the gamepad face-right button go back by default (<em>Back Keys</em>), the gamepad special-right button closes the stack (<em>Instant Close Keys</em>).</li>
+      </ol>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+        <tr><td class="node">UMenuStack</td><td><span class="tag cls">Class</span></td><td>Modal stack of menu levels with back navigation; can change input mode, pointer visibility and pause on open/close.</td></tr>
+        <tr><td class="node">Push Menu By Class</td><td><span class="tag call">Callable</span></td><td>Create a menu level from a class, show it and supersede the previous level.</td></tr>
+        <tr><td class="node">Push Menu By Object</td><td><span class="tag call">Callable</span></td><td>Push an existing menu instance.</td></tr>
+        <tr><td class="node">Pop Menu</td><td><span class="tag call">Callable</span></td><td>Remove (destroy) the top level.</td></tr>
+        <tr><td class="node">Count</td><td><span class="tag call">Callable</span></td><td>Number of active levels.</td></tr>
+        <tr><td class="node">Close All</td><td><span class="tag call">Callable</span></td><td>Close the whole stack at once.</td></tr>
+        <tr><td class="node">Get Top Menu</td><td><span class="tag call">Callable</span></td><td>Current top level.</td></tr>
+        <tr><td class="node">Get Previous Menu</td><td><span class="tag call">Callable</span></td><td>Level directly below the top.</td></tr>
+        <tr><td class="node">On Closed</td><td><span class="tag evt">Event</span></td><td>Stack: closed for any reason (with <em>Was Cancel</em>). Menu level: raised as the level closes.</td></tr>
+        <tr><td class="node">UMenuBase</td><td><span class="tag cls">Class</span></td><td>One menu level (a focusable panel). Options: Request Focus, Embed In Parent Container, Hide When Superceded, Block Clicks.</td></tr>
+        <tr><td class="node">Open</td><td><span class="tag call">Callable</span></td><td>Show a menu that is used without a stack.</td></tr>
+        <tr><td class="node">Request Close</td><td><span class="tag call">Callable</span></td><td>Ask the level to close; it can veto via <em>Validate Close</em>.</td></tr>
+        <tr><td class="node">Close</td><td><span class="tag call">Callable</span></td><td>Always close the level.</td></tr>
+        <tr><td class="node">Is Top Of Stack</td><td><span class="tag call">Callable</span></td><td>Whether this level is currently on top.</td></tr>
+        <tr><td class="node">After Closed</td><td><span class="tag evt">Event</span></td><td>Raised after the level has closed.</td></tr>
+        <tr><td class="node">Validate Close</td><td><span class="tag evt">Event</span></td><td>Overridable: return false to refuse a close request.</td></tr>
+        <tr><td class="node">On Superceded In Stack</td><td><span class="tag evt">Event</span></td><td>Another level was pushed on top.</td></tr>
+        <tr><td class="node">On Regained Focus In Stack</td><td><span class="tag evt">Event</span></td><td>The level above was closed.</td></tr>
+        <tr><td class="node">On Added To Stack</td><td><span class="tag evt">Event</span></td><td>The level was added to a stack.</td></tr>
+        <tr><td class="node">On Removed From Stack</td><td><span class="tag evt">Event</span></td><td>The level was removed from its stack.</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="options"><h2>Options &amp; tabs</h2>
+      <p><span class="node">UOptionWidgetBase</span> is an option selector that shows clickable arrows for the mouse and a rocker for gamepad/keyboard. Derive a Widget Blueprint from it containing <code>MouseVersion</code>, <code>MouseUpButton</code>, <code>MouseDownButton</code>, <code>MouseUpImage</code>, <code>MouseDownImage</code>, <code>MouseText</code>, <code>GamepadVersion</code>, <code>GamepadUpImage</code>, <code>GamepadDownImage</code>, <code>GamepadText</code> and optionally <code>GamepadUpDisabledImage</code> / <code>GamepadDownDisabledImage</code> (used with <em>Disable At Limit</em>). On <code>GamepadVersion</code> use custom navigation to call <em>Change Option</em> with -1 / 1.</p>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+        <tr><td class="node">Clear Options</td><td><span class="tag call">Callable</span></td><td>Remove all options.</td></tr>
+        <tr><td class="node">Add Option</td><td><span class="tag call">Callable</span></td><td>Append an option; returns its index.</td></tr>
+        <tr><td class="node">Set Options</td><td><span class="tag call">Callable</span></td><td>Replace all options and choose the selected index.</td></tr>
+        <tr><td class="node">Get Selected Index</td><td><span class="tag pure">Pure</span></td><td>Selected index.</td></tr>
+        <tr><td class="node">Get Selected Option</td><td><span class="tag pure">Pure</span></td><td>Selected option text.</td></tr>
+        <tr><td class="node">Set Selected Index</td><td><span class="tag call">Callable</span></td><td>Select an option by index.</td></tr>
+        <tr><td class="node">Change Option</td><td><span class="tag call">Callable</span></td><td>Move the selection by a delta (use from custom navigation).</td></tr>
+        <tr><td class="node">Set Mouse Mode</td><td><span class="tag call">Callable</span></td><td>Show the mouse version.</td></tr>
+        <tr><td class="node">Set Button Mode</td><td><span class="tag call">Callable</span></td><td>Show the gamepad/keyboard version.</td></tr>
+        <tr><td class="node">Update From Input Mode</td><td><span class="tag call">Callable</span></td><td>Switch version for a given input mode.</td></tr>
+        <tr><td class="node">Get Current Input Mode</td><td><span class="tag call">Callable</span></td><td>Input mode the widget is displaying for.</td></tr>
+        <tr><td class="node">Post Selected Option Changed</td><td><span class="tag evt">Event</span></td><td>Overridable hook after the selection changes.</td></tr>
+        <tr><td class="node">On Selected Option Changed</td><td><span class="tag evt">Event</span></td><td>The player changed the selection.</td></tr>
+        <tr><td class="node">UNamedOptionWidgetBase</td><td><span class="tag cls">Class</span></td><td>Option widget addressed by <code>FName</code> keys (populated from code/graphs).</td></tr>
+        <tr><td class="node">Add Named Option</td><td><span class="tag call">Callable</span></td><td>Append an option with a name.</td></tr>
+        <tr><td class="node">Set Named Options</td><td><span class="tag call">Callable</span></td><td>Replace all options from a name-to-text map.</td></tr>
+        <tr><td class="node">Get Selected Name</td><td><span class="tag pure">Pure</span></td><td>Name of the selected option.</td></tr>
+        <tr><td class="node">Get Index For Name</td><td><span class="tag call">Callable</span></td><td>Index of a named option.</td></tr>
+        <tr><td class="node">Get Name For Index</td><td><span class="tag call">Callable</span></td><td>Name of the option at an index.</td></tr>
+        <tr><td class="node">Set Selected Name</td><td><span class="tag call">Callable</span></td><td>Select by name.</td></tr>
+        <tr><td class="node">UTabListWidget</td><td><span class="tag cls">Class</span></td><td>Tab bar that drives a Widget Switcher; needs a panel named <code>TabButtonContainer</code>. Previous/next tab keys default to the gamepad shoulders and Q/E.</td></tr>
+        <tr><td class="node">Register Tab</td><td><span class="tag call">Callable</span></td><td>Add a tab: id, button class, label and content widget.</td></tr>
+        <tr><td class="node">Set Target Widget Switcher</td><td><span class="tag call">Callable</span></td><td>Widget Switcher controlled by the tabs.</td></tr>
+        <tr><td class="node">Increment Tab Index</td><td><span class="tag call">Callable</span></td><td>Move the selection by an amount.</td></tr>
+        <tr><td class="node">Select Tab</td><td><span class="tag call">Callable</span></td><td>Select a tab by index.</td></tr>
+        <tr><td class="node">On Content Widget Changed</td><td><span class="tag evt">Event</span></td><td>Previous and new content widget.</td></tr>
+        <tr><td class="node">UTabButton</td><td><span class="tag cls">Class</span></td><td>Base class for tab buttons created by the tab list.</td></tr>
+        <tr><td class="node">Set Tab Label</td><td><span class="tag evt">Event</span></td><td>Overridable: display the label.</td></tr>
+        <tr><td class="node">Set Tab Selected</td><td><span class="tag call">Callable</span></td><td>Mark the tab selected/unselected.</td></tr>
+        <tr><td class="node">Notify Tab Selected</td><td><span class="tag call">Callable</span></td><td>Call from your button's click to select this tab.</td></tr>
+        <tr><td class="node">Refresh For Selection Changed</td><td><span class="tag evt">Event</span></td><td>Overridable: update visuals for the selection state.</td></tr>
+        <tr><td class="node">On Tab Selected</td><td><span class="tag evt">Event</span></td><td>Tab index that was selected.</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="text"><h2>Text &amp; progress widgets</h2>
+      <p><span class="node">UTypewriterTextWidget</span>: create a Widget Blueprint derived from it containing a <span class="node">URichTextBlockForTypewriter</span> named <code>LineText</code> (module <code>UtilityBeltTypewriter</code>, header <code>TypewriterTextWidget.h</code>). Line breaks and the final height are calculated before playback, so text never jumps between lines. Properties: Letter Play Time, End Hold Time, Pause Time At Sentence Terminators, Sentence/Clause Terminators, Max Number Of Lines, Play When Paused, New Word Event.</p>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+        <tr><td class="node">Play Line</td><td><span class="tag call">Callable</span></td><td>Start typing a line at a speed multiplier.</td></tr>
+        <tr><td class="node">Skip To Line End</td><td><span class="tag call">Callable</span></td><td>Show the rest of the current line immediately.</td></tr>
+        <tr><td class="node">Has Finished Playing Line</td><td><span class="tag call">Callable</span></td><td>Whether the whole line has been shown.</td></tr>
+        <tr><td class="node">Has More Line Parts</td><td><span class="tag call">Callable</span></td><td>True when Max Number Of Lines split the line and parts remain.</td></tr>
+        <tr><td class="node">Play Next Line Part</td><td><span class="tag call">Callable</span></td><td>Play the next part of a split line.</td></tr>
+        <tr><td class="node">Get Current Line</td><td><span class="tag call">Callable</span></td><td>Line currently being played.</td></tr>
+        <tr><td class="node">Set Text</td><td><span class="tag call">Callable</span></td><td>Set text immediately without the effect.</td></tr>
+        <tr><td class="node">Get Text</td><td><span class="tag call">Callable</span></td><td>Current text.</td></tr>
+        <tr><td class="node">Get Play Speed</td><td><span class="tag call">Callable</span></td><td>Current speed multiplier.</td></tr>
+        <tr><td class="node">Set Play Speed</td><td><span class="tag call">Callable</span></td><td>Change the speed multiplier while playing.</td></tr>
+        <tr><td class="node">Find Word Vowels</td><td><span class="tag call">Callable</span></td><td>Positions of the vowels in a word (e.g. for lip-flap or voice blips).</td></tr>
+        <tr><td class="node">On Play Letter</td><td><span class="tag evt">Event</span></td><td>Implementable: one or more letters were added.</td></tr>
+        <tr><td class="node">On Line Finished Playing</td><td><span class="tag evt">Event</span></td><td>Implementable: the line finished.</td></tr>
+        <tr><td class="node">On Typewriter Line Finished</td><td><span class="tag evt">Event</span></td><td>The line finished playing or was skipped.</td></tr>
+        <tr><td class="node">On Typewriter Letter Added</td><td><span class="tag evt">Event</span></td><td>New letters shown.</td></tr>
+        <tr><td class="node">On Typewriter Start Word</td><td><span class="tag evt">Event</span></td><td>A new word started (when New Word Event is enabled).</td></tr>
+        <tr><td class="node">On Typewriter Run Name Changed</td><td><span class="tag evt">Event</span></td><td>The rich-text style run changed.</td></tr>
+        <tr><td class="node">USmoothChangingProgressBar</td><td><span class="tag cls">Class</span></td><td>Progress bar that animates to its target (Percent Change Speed, Percent Change Frequency).</td></tr>
+        <tr><td class="node">Set Percent Smoothly</td><td><span class="tag call">Callable</span></td><td>Animate to a new percentage.</td></tr>
+        <tr><td class="node">Stop Smooth Percent Change</td><td><span class="tag call">Callable</span></td><td>Stop the animation (call before a plain Set Percent).</td></tr>
+        <tr><td class="node">UBeltSubtitleTextblock</td><td><span class="tag cls">Class</span></td><td>Text block that displays engine subtitles; style it like any text block.</td></tr>
+        <tr><td class="node">UMultiSubtitleVerticalbox</td><td><span class="tag cls">Class</span></td><td>Vertical box showing several recent subtitle lines (Concurrent Lines, Maximum Age, font and colour options).</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="gameplay"><h2>Gameplay helpers</h2>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+        <tr><td class="node">UBeltPooledActorSystem</td><td><span class="tag cls">Class</span></td><td>World subsystem for actor pooling. Pooled actors are hidden, have physics disabled and are moved to <em>Storage Location</em>.</td></tr>
+        <tr><td class="node">Get</td><td><span class="tag call">Callable</span></td><td>Static: get the pooled actor system for a world context.</td></tr>
+        <tr><td class="node">Get Pooled Actor</td><td><span class="tag call">Callable</span></td><td>Re-use or spawn an actor of a class at a location; reports whether it was re-used.</td></tr>
+        <tr><td class="node">Release Pooled Actor</td><td><span class="tag call">Callable</span></td><td>Return an actor to the pool instead of destroying it.</td></tr>
+        <tr><td class="node">Add Actor To Pool</td><td><span class="tag call">Callable</span></td><td>Add an externally created actor to the pool.</td></tr>
+        <tr><td class="node">Pre Warm Actor Pool</td><td><span class="tag call">Callable</span></td><td>Pre-create a number of actors.</td></tr>
+        <tr><td class="node">Drain Actor Pool</td><td><span class="tag call">Callable</span></td><td>Destroy surplus actors of one class.</td></tr>
+        <tr><td class="node">Drain All Actor Pools</td><td><span class="tag call">Callable</span></td><td>Destroy all pooled actors.</td></tr>
+        <tr><td class="node">IBeltPooledActor</td><td><span class="tag cls">Class</span></td><td>Optional interface for pooled actors.</td></tr>
+        <tr><td class="node">Deactivate On Added To Pool</td><td><span class="tag evt">Event</span></td><td>Interface event: the actor entered the pool.</td></tr>
+        <tr><td class="node">Reactivate On Removed From Pool</td><td><span class="tag evt">Event</span></td><td>Interface event: the actor is being re-used.</td></tr>
+        <tr><td class="node">UBeltLightFlickerComponent</td><td><span class="tag cls">Class</span></td><td>Generates a flicker value from a pattern (built-in candle, torch, strobe, pulse and flicker patterns, or a custom a&ndash;z string, 0.1 s per character). Replicates its time position. Properties: Flicker Pattern, Custom Flicker Pattern, Max Value, Min Value, Speed, Auto Play.</td></tr>
+        <tr><td class="node">Play</td><td><span class="tag call">Callable</span></td><td>Start (optionally resetting time).</td></tr>
+        <tr><td class="node">Pause</td><td><span class="tag call">Callable</span></td><td>Stop ticking.</td></tr>
+        <tr><td class="node">Get Current Value</td><td><span class="tag pure">Pure</span></td><td>Latest output value.</td></tr>
+        <tr><td class="node">Set Flicker Pattern</td><td><span class="tag call">Callable</span></td><td>Change pattern (and custom string) at runtime.</td></tr>
+        <tr><td class="node">Get Flicker Pattern</td><td><span class="tag pure">Pure</span></td><td>Current pattern and custom string.</td></tr>
+        <tr><td class="node">On Light Flicker Update</td><td><span class="tag evt">Event</span></td><td>New light value each tick &mdash; feed it into light intensity or a material parameter.</td></tr>
+        <tr><td class="node">Evaluate Light Curve</td><td><span class="tag pure">Pure</span></td><td>Sample a built-in pattern at a time without a component.</td></tr>
+        <tr><td class="node">UBeltSpringArmComponent</td><td><span class="tag cls">Class</span></td><td>Spring arm with smooth collision avoidance (<em>Enable Smooth Collision Avoidance</em>, <em>Smooth Collision Avoidance Speed</em>) that also interpolates when the collision test is off.</td></tr>
+        <tr><td class="node">Set Target Offset Smooth</td><td><span class="tag call">Callable</span></td><td>Interpolate the target offset.</td></tr>
+        <tr><td class="node">Cancel Target Offset Smooth</td><td><span class="tag call">Callable</span></td><td>Stop a target-offset interpolation.</td></tr>
+        <tr><td class="node">Set Socket Offset Smooth</td><td><span class="tag call">Callable</span></td><td>Interpolate the socket offset.</td></tr>
+        <tr><td class="node">Cancel Socket Offset Smooth</td><td><span class="tag call">Callable</span></td><td>Stop a socket-offset interpolation.</td></tr>
+        <tr><td class="node">Jump To Desired Location</td><td><span class="tag call">Callable</span></td><td>Snap the camera to its desired position immediately.</td></tr>
+        <tr><td class="node">ABeltDynamicNavMeshVolume</td><td><span class="tag cls">Class</span></td><td>NavMesh bounds volume that can move/resize at runtime (NavMesh Runtime Generation must be Dynamic).</td></tr>
+        <tr><td class="node">Set Location And Dimensions</td><td><span class="tag call">Callable</span></td><td>Move and resize the volume, then update navigation.</td></tr>
+        <tr><td class="node">Set Dimensions</td><td><span class="tag call">Callable</span></td><td>Resize the volume, then update navigation.</td></tr>
+        <tr><td class="node">ABeltReplicatedPhysicsActor</td><td><span class="tag cls">Class</span></td><td>Static mesh actor simulated on the server and replicated smoothly to clients. Spawn it on the server only.</td></tr>
+      </tbody></table></div>
+      <p>C++ only: <code>FBeltTextureRenderTargetPool</code> (obtained with <code>UBeltGameSubsystem::GetTextureRenderTargetPool</code>) reserves and reuses render targets by size and format; <code>UBeltAssetHelpers</code> finds Blueprint classes under content paths with an object library.</p>
+    </section>
+
+    <section id="maths"><h2>Maths, easing &amp; random</h2>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+        <tr><td class="node">Ease Alpha</td><td><span class="tag call">Callable</span></td><td>Apply an <code>EBeltEaseFunction</code> (sine, quad, cubic, quart, quint, expo, circ, back, elastic, bounce; in/out/in-out) to a 0&ndash;1 alpha.</td></tr>
+        <tr><td class="node">Ease Float</td><td><span class="tag call">Callable</span></td><td>Eased interpolation between two floats.</td></tr>
+        <tr><td class="node">Ease Vector</td><td><span class="tag call">Callable</span></td><td>Eased interpolation between vectors.</td></tr>
+        <tr><td class="node">Ease Rotator</td><td><span class="tag call">Callable</span></td><td>Eased interpolation between rotators (optionally shortest path).</td></tr>
+        <tr><td class="node">Ease Quat</td><td><span class="tag call">Callable</span></td><td>Eased slerp between quaternions.</td></tr>
+        <tr><td class="node">Ease Transform</td><td><span class="tag call">Callable</span></td><td>Eased interpolation of rotation, location and scale.</td></tr>
+        <tr><td class="node">Sphere Overlap Cone</td><td><span class="tag call">Callable</span></td><td>Whether a sphere overlaps a cone (angle in degrees).</td></tr>
+        <tr><td class="node">Heading Angle 2D</td><td><span class="tag pure">Pure</span></td><td>Heading of a 2D direction in radians (0 along +X).</td></tr>
+        <tr><td class="node">Angle Between 2D</td><td><span class="tag pure">Pure</span></td><td>Signed angle between two 2D directions in radians.</td></tr>
+        <tr><td class="node">Get Perceived Luminance</td><td><span class="tag call">Callable</span></td><td>Perceived luminance of a colour (ITU BT.709).</td></tr>
+        <tr><td class="node">Get Perceived Luminance 2</td><td><span class="tag call">Callable</span></td><td>Perceived luminance of a colour (ITU BT.601).</td></tr>
+        <tr><td class="node">Set Widget Focus</td><td><span class="tag call">Callable</span></td><td>Focus a widget through <em>Set Focus Properly</em> when it is a focusable user widget.</td></tr>
+        <tr><td class="node">Insert Child Widget At</td><td><span class="tag call">Callable</span></td><td>Insert a child into a panel at an index at runtime (keeps horizontal/vertical box padding).</td></tr>
+        <tr><td class="node">Find Closest Widget In Input Direction</td><td><span class="tag call">Callable</span></td><td>Find the nearest child of a panel in any 2D direction (for analogue-stick navigation).</td></tr>
+        <tr><td class="node">Add View Origin To Streaming</td><td><span class="tag call">Callable</span></td><td>Tell texture streaming about an extra view point (e.g. a scene capture).</td></tr>
+        <tr><td class="node">Update Streaming</td><td><span class="tag call">Callable</span></td><td>Force a streaming update, optionally blocking until done.</td></tr>
+        <tr><td class="node">Get Project Version</td><td><span class="tag pure">Pure</span></td><td>Project Version string from the project settings.</td></tr>
+        <tr><td class="node">Make Balanced Random Stream</td><td><span class="tag pure">Pure</span></td><td>Create a seeded <code>FBeltBalancedRandomStream</code> (Halton sequence &mdash; more even than ordinary random numbers).</td></tr>
+        <tr><td class="node">Balanced Random</td><td><span class="tag call">Callable</span></td><td>Next value 0&ndash;1.</td></tr>
+        <tr><td class="node">Balanced Random 2D</td><td><span class="tag call">Callable</span></td><td>Next 2D value.</td></tr>
+        <tr><td class="node">Balanced Random 3D</td><td><span class="tag call">Callable</span></td><td>Next 3D value.</td></tr>
+        <tr><td class="node">Balanced Random Vector</td><td><span class="tag call">Callable</span></td><td>Next unit vector.</td></tr>
+        <tr><td class="node">Balanced Random Point In Box</td><td><span class="tag call">Callable</span></td><td>Next point inside a box.</td></tr>
+        <tr><td class="node">UBeltIndexShuffleBag</td><td><span class="tag cls">Class</span></td><td>Draws array indices without repeats until the bag is empty.</td></tr>
+        <tr><td class="node">Make Index Shuffle Bag</td><td><span class="tag call">Callable</span></td><td>Create a bag for N indices with a seed.</td></tr>
+        <tr><td class="node">Reinitialise</td><td><span class="tag call">Callable</span></td><td>Reset the bag with a new size and seed.</td></tr>
+        <tr><td class="node">Next</td><td><span class="tag call">Callable</span></td><td>Pull the next index (refills when empty).</td></tr>
+        <tr><td class="node">Reset</td><td><span class="tag call">Callable</span></td><td>Return all pulled indices to the bag.</td></tr>
+        <tr><td class="node">Get Num Remaining</td><td><span class="tag pure">Pure</span></td><td>Indices left in the bag.</td></tr>
+        <tr><td class="node">Get Num Pulled</td><td><span class="tag pure">Pure</span></td><td>Indices already pulled.</td></tr>
+        <tr><td class="node">Get Num Total</td><td><span class="tag pure">Pure</span></td><td>Bag size.</td></tr>
+      </tbody></table></div>
+      <p>C++ extras: <code>BeltMathHelpers</code> (<code>OverlapConvex</code>, <code>GetDistanceToConvex2D</code>, <code>IsPointInTriangle2D</code>, <code>Fill2DRegionWithRectangles</code>, <code>ProjectConvex2D</code>, <code>OverlapConvex2D</code>), <code>FBeltBalancedRandomStream1D</code> / <code>2D</code> / <code>3D</code>, and the template <code>FBeltShuffleBag&lt;T&gt;</code>.</p>
+    </section>
+
+    <section id="debug"><h2>Debug &amp; editor helpers</h2>
+      <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+        <tr><td class="node">UBeltEditorVisComponent</td><td><span class="tag cls">Class</span></td><td>"UtilityBelt Editor Visualisation" component: arrays of Lines, Arrows, Circles, Arcs, Spheres, Boxes, Cylinders, Capsules and Meshes drawn in the editor even when the actor is not selected. Editor-only, hidden in game.</td></tr>
+        <tr><td class="node">FBeltFixedDataTableRowHandle</td><td><span class="tag cls">Class</span></td><td>Data-table row handle whose table is fixed by <code>meta=(DataTable="/Game/...")</code>; the Details panel shows only a row picker and a browse button.</td></tr>
+        <tr><td class="node">FBeltDebugRenderSceneProxy</td><td><span class="tag cls">Class</span></td><td>C++ debug scene proxy with circles, arcs, transformed cylinders/capsules and wireframe meshes.</td></tr>
+        <tr><td class="node">FBeltVisualLogger</td><td><span class="tag cls">Class</span></td><td>C++ Visual Logger shapes via <code>UE_VLOG_TRIANGLE</code>, <code>UE_VLOG_SQUARE</code>, <code>UE_VLOG_POLY</code>, <code>UE_VLOG_STAR</code> (and <code>_THICK</code> / <code>UE_CVLOG_</code> variants).</td></tr>
+      </tbody></table></div>
+<pre><code>#include "BeltFixedDataTableRowHandle.h"
+#include "BeltLogHelpers.h"
+
+UPROPERTY(EditAnywhere, meta=(DataTable="/Game/Data/DT_Items"))
+FBeltFixedDataTableRowHandle Item;
+
+BELT_LOG_ONCE(LogTemp, Warning, TEXT("Shown once per session"));</code></pre>
+    </section>
+
+    <section id="troubleshooting"><h2>Troubleshooting</h2><div class="tbl-wrap"><table class="t"><thead><tr><th>Symptom</th><th>Cause and fix</th></tr></thead><tbody>
+      <tr><td>Input Image / rich-text prompts are blank</td><td>No UI theme is configured or the Data Tables have no row for the key. Set <code>DefaultUiThemePath</code> in <code>DefaultGame.ini</code>, restart the editor, and make sure the row names match key names (e.g. <code>Gamepad_FaceButton_Bottom</code>).</td></tr>
+      <tr><td>Prompts work in the editor but not in a packaged build</td><td>The theme is loaded from code, so it is not cooked automatically. Add it as a primary asset in the Asset Manager or reference it from a Primary Asset Label.</td></tr>
+      <tr><td>The mouse cursor reappears while using a gamepad</td><td>Set <em>Game Viewport Client Class</em> to <code>BeltGameViewportClientBase</code> and keep <em>Hide Mouse When Gamepad Used</em> enabled.</td></tr>
+      <tr><td>A dotted outline appears around focused buttons</td><td>Set <em>Project Settings &gt; User Interface &gt; Render Focus Rule</em> to <em>Never</em>; the focusable widgets use their Hovered style instead.</td></tr>
+      <tr><td><code>&lt;input eaction="..."/&gt;</code> shows nothing</td><td>The action is looked up by name in <em>Directories to search for Enhanced Input Actions</em>; add the folder that contains the Input Action asset.</td></tr>
+      <tr><td>Menu levels do not appear inside the stack</td><td>The Menu Stack Blueprint needs a Named Slot (or other content widget) called <code>MenuContainer</code>, and <em>Embed In Parent Container</em> must be enabled on the level.</td></tr>
+      <tr><td>Dynamic NavMesh volume changes have no effect</td><td>Set the RecastNavMesh <em>Runtime Generation</em> to <em>Dynamic</em> in Project Settings &gt; Navigation Mesh.</td></tr>
+    </tbody></table></div></section>
+    <section id="credits"><h2>Credits</h2><p>&copy; 2026 <strong>Alpha XP</strong> &mdash; <a href="https://alphaxp.net/">alphaxp.net</a> &middot; Support: <a href="mailto:support@alphaxp.net">support@alphaxp.net</a>.
+Built and verified for Unreal Engine 5.8.</p></section>
+  </main>
+</div>
+</div>
+
+<footer>UtilityBelt &middot; &copy; 2026 Alpha XP &mdash; <a href="https://alphaxp.net/">alphaxp.net</a> &middot; UE 5.8</footer>
+</body>
+</html>
