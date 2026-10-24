@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NoiseKit &mdash; Documentation</title>
+<style>
+  :root {
+    --bg: #0f1115; --surface: #161a21; --surface2: #1d222b; --border: #272d38;
+    --text: #e6e9ef; --muted: #9aa3b2; --accent: #9b6bff;
+    --accent2: color-mix(in srgb, var(--accent) 70%, #ffffff);
+    --accent-dim: color-mix(in srgb, var(--accent) 22%, #11141a);
+    --green: #3dba60; --orange: #e0a44f; --mono: 'Consolas','SFMono-Regular',monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; line-height: 1.6; font-size: 15px; }
+  a { color: var(--accent2); text-decoration: none; } a:hover { text-decoration: underline; }
+  code { font-family: var(--mono); background: #11141a; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #d7dbe6; }
+  pre { background: #0c0e12; border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+
+  .hero { padding: 56px 0 40px; background: radial-gradient(1200px 400px at 20% -10%, color-mix(in srgb, var(--accent) 30%, transparent), transparent), var(--surface); border-bottom: 1px solid var(--border); }
+  .hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+  .hero-badge { display: inline-block; background: var(--accent-dim); color: var(--accent2); padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: .5px; }
+  .hero h1 { font-size: 40px; margin: 18px 0 8px; line-height: 1.1; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: var(--muted); max-width: 720px; font-size: 16px; }
+  .badges { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .badge { background: #11141a; border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 13px; color: var(--muted); }
+  .badge strong { color: var(--text); }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+  .two-col { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
+  .sidebar { position: sticky; top: 20px; padding-top: 32px; }
+  .sidebar nav h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin: 0 0 10px; }
+  .sidebar nav a { display: block; padding: 5px 0; color: var(--muted); font-size: 14px; }
+  .sidebar nav a:hover { color: var(--text); text-decoration: none; }
+  .content { padding: 32px 0 80px; min-width: 0; }
+  section { margin-bottom: 44px; }
+  h2 { font-size: 26px; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 18px; margin: 26px 0 10px; }
+
+  table.t { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+  table.t th, table.t td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.t th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+  table.t tr:hover td { background: #12151b; }
+  .tbl-wrap { overflow-x: auto; }
+  .node { font-family: var(--mono); color: var(--accent2); font-size: 13px; white-space: nowrap; }
+  .tag { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; white-space: nowrap; }
+  .tag.call { background: #3a2a12; color: var(--orange); }
+  .tag.pure { background: #123a1e; color: var(--green); }
+  .tag.evt  { background: #16314f; color: #8cc4ff; }
+  .tag.cls  { background: #2a1f3a; color: #b79cff; }
+  .tag.asset { background: #1f2a2a; color: #7fd6cf; }
+
+  .box { border: 1px solid var(--border); border-left: 3px solid var(--accent); background: var(--surface); border-radius: 6px; padding: 14px 16px; margin: 16px 0; }
+  .box.tip { border-left-color: var(--green); }
+  .box.warn { border-left-color: var(--orange); }
+  .box > strong:first-child { display: block; margin-bottom: 4px; }
+  ol.steps { padding-left: 20px; } ol.steps li { margin: 8px 0; }
+  ul.feat { padding-left: 20px; } ul.feat li { margin: 6px 0; }
+  footer { border-top: 1px solid var(--border); padding: 28px 40px; text-align: center; color: var(--muted); font-size: 13px; }
+  @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } .sidebar { position: static; } .wrap, .hero-inner { padding: 0 20px; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Plugin Documentation</div>
+    <h1>NoiseKit<br><span>Modular noise graphs for Blueprints and C++</span></h1>
+    <p>Build coherent noise from small, combinable modules &mdash; value, gradient, simplex, cellular and white noise with fractal layering &mdash; then select, blend, add, warp, mask and shape the result, and sample any module in 2D or 3D.</p>
+    <div class="badges"><div class="badge">v1.0</div><div class="badge">UE <strong>4.27 &amp; 5.8</strong></div><div class="badge">Win64 <em>(verified)</em></div><div class="badge">Category <strong>Procedural</strong></div><div class="badge">Alpha XP</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="two-col">
+  <aside class="sidebar"><nav><h3>Contents</h3>
+      <a href="#overview">Overview</a>
+      <a href="#requirements">Requirements</a>
+      <a href="#install">Installation</a>
+      <a href="#quickstart">Quick start</a>
+      <a href="#factory">Factory nodes</a>
+      <a href="#sampling">Sampling</a>
+      <a href="#classes">Classes</a>
+      <a href="#enums">Enums</a>
+      <a href="#cpp">C++ core generator API</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+      <a href="#credits">Credits</a>
+  </nav></aside>
+  <main class="content">
+    <section id="overview"><h2>Overview</h2>
+      <p>NoiseKit generates procedural noise for terrain, foliage scattering, textures, level layouts and any other gameplay that needs smooth pseudo-random values. You create a core noise generator, combine generators with modules, and sample the final module with <span class="node">Get Noise 2D</span> or <span class="node">Get Noise 3D</span>. Every factory is a Blueprint node, and the same classes are available from C++.</p>
+      <ul class="feat">
+        <li>Core generator with eight noise types: Value, Gradient and Simplex (each with a fractal variant), Cellular and White noise.</li>
+        <li>Fractal layering (FBM, Billow, Rigid Multi) with octaves, lacunarity and gain; Linear, Hermite or Quintic interpolation.</li>
+        <li>Cellular (Voronoi) noise with Euclidean, Manhattan or Natural distance and eight return types.</li>
+        <li>Select, 3-way select, blend (with an optional float curve) and masked add modules to mix generators.</li>
+        <li>Scale/bias, constant, one- or two-pass domain warp, radial and shore-filter modules to shape results.</li>
+        <li>Spline distance generator that turns spline components into a distance field (roads, rivers, paths).</li>
+        <li>One sampling interface for 2D and 3D on every module; pure C++ runtime module with no prebuilt binaries.</li>
+      </ul>
+    </section>
+    <section id="requirements"><h2>Requirements</h2><div class="tbl-wrap"><table class="t"><thead><tr><th>Requirement</th><th>Details</th></tr></thead><tbody>
+      <tr><td class="node">Unreal Engine</td><td>4.27 and 5.8 (verified clean on both)</td></tr>
+      <tr><td class="node">Modules</td><td><code>NoiseKitFastNoise</code> (Runtime, under <code>Source/ThirdParty</code>: the core generator, its enums and the module base class) and <code>NoiseKit</code> (Runtime: modules, factory nodes)</td></tr>
+      <tr><td class="node">Dependencies</td><td>None (uses only the engine modules Core, CoreUObject, Engine and InputCore)</td></tr>
+      <tr><td class="node">Language</td><td>Blueprints and C++</td></tr>
+      <tr><td class="node">Platforms</td><td>No platform restriction in the plugin descriptor. Win64 is verified by Alpha XP; other platforms are supported by the code, not verified by Alpha XP.</td></tr>
+    </tbody></table></div></section>
+    <section id="install"><h2>Installation</h2>
+      <ol class="steps">
+        <li>Close the editor and copy the <code>NoiseKit</code> folder into your project's <code>Plugins/</code> folder (create it if needed), or install the plugin from Fab into your engine.</li>
+        <li>Open the project. For a C++ project, let the editor rebuild the plugin module when prompted, or build the project from your IDE.</li>
+        <li>Enable <strong>NoiseKit</strong> in <em>Edit &gt; Plugins</em> (search for &ldquo;NoiseKit&rdquo;) and restart the editor.</li>
+        <li>C++ only: add <code>"NoiseKit"</code> to <code>PublicDependencyModuleNames</code> in your module's <code>.Build.cs</code>. <code>NoiseKit</code> depends publicly on <code>NoiseKitFastNoise</code>, so its headers (<code>NoiseKitCoreNoise.h</code>, <code>NoiseKitNoiseGenerator.h</code>, <code>NoiseKitFastNoiseTypes.h</code>) are available automatically.</li>
+      </ol>
+      <div class="box tip"><strong>Verifying the install</strong> In any Blueprint graph, search for <span class="node">Create Noise Generator</span>; it appears under the <em>NoiseKit</em> category.</div>
+    </section>
+    <section id="quickstart"><h2>Quick start</h2>
+      <h3>Blueprint</h3>
+      <ol class="steps">
+        <li>In an actor's <em>Begin Play</em>, add <span class="node">Create Fractal Noise Generator</span> (category <em>NoiseKit</em>), choose <em>Simplex</em>, a seed and a frequency.</li>
+        <li>Promote the return value to a variable. The result is a UObject; an unreferenced object is garbage collected.</li>
+        <li>Call <span class="node">Get Noise 2D</span> on the variable with world X and Y to get a value (typically between -1 and 1).</li>
+        <li>Create a second generator and a control generator, combine them with <span class="node">Create Select Module</span>, and sample the select module instead.</li>
+      </ol>
+      <h3>C++</h3>
+<pre><code>#include "NoiseKitBlueprintFunctionLibrary.h"
+
+// In your actor's header: keep the graph referenced so it is not garbage collected.
+// UPROPERTY() UNoiseKitNoiseGenerator* Terrain = nullptr;
+
+void AMyTerrainActor::BuildNoise()
+{
+    UNoiseKitNoiseGenerator* Hills = UNoiseKitBlueprintFunctionLibrary::CreateFractalNoiseGenerator(
+        this, ENoiseKitFractalNoiseType::FractalSimplex, /*seed*/ 42, /*frequency*/ 0.002f);
+
+    UNoiseKitNoiseGenerator* Mountains = UNoiseKitBlueprintFunctionLibrary::CreateFractalNoiseGenerator(
+        this, ENoiseKitFractalNoiseType::FractalGradient, 7, 0.001f, 0.5f,
+        ENoiseKitInterp::InterpQuintic, ENoiseKitFractalType::RigidMulti, /*octaves*/ 5);
+
+    UNoiseKitNoiseGenerator* Mask = UNoiseKitBlueprintFunctionLibrary::CreateCellularNoiseGenerator(this, 3, 0.0005f);
+
+    Terrain = UNoiseKitBlueprintFunctionLibrary::CreateSelectModule(
+        this, Mountains, Hills, Mask, ENoiseKitSelectInterpType::SineInOut, /*falloff*/ 0.2f, /*threshold*/ 0.0f);
+
+    const float Height = Terrain-&gt;GetNoise2D(1200.f, -350.f);
+    UE_LOG(LogTemp, Log, TEXT("Height: %f"), Height);
+}</code></pre>
+    </section>
+    <section id="factory"><h2>Factory nodes</h2>
+      <p>Static, pure nodes in the <em>NoiseKit</em> category. Each returns a <code>UNoiseKitNoiseGenerator</code>; the hidden <em>Outer</em> pin defaults to the calling object. Combination nodes return <em>None</em> when a required input module is missing.</p>
+    <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+      <tr><td class="node">Create Noise Generator</td><td><span class="tag pure">Pure</span></td><td>Full core generator: noise type, cellular distance function and return type, fractal type, interpolation, seed (1337), octaves (4), frequency (0.001), lacunarity (2.0) and fractal gain (0.5).</td></tr>
+      <tr><td class="node">Create Simple Noise Generator</td><td><span class="tag pure">Pure</span></td><td>Value, Gradient, Simplex or White noise without fractal layers. Seed (12345), frequency (0.1), interpolation (Linear).</td></tr>
+      <tr><td class="node">Create Fractal Noise Generator</td><td><span class="tag pure">Pure</span></td><td>Value, Gradient or Simplex noise with FBM, Billow or Rigid Multi fractal layering; gain, octaves and lacunarity.</td></tr>
+      <tr><td class="node">Create Cellular Noise Generator</td><td><span class="tag pure">Pure</span></td><td>Cellular (Voronoi) noise with a distance function (Euclidean, Manhattan, Natural) and a return type.</td></tr>
+      <tr><td class="node">Create Select Module</td><td><span class="tag pure">Pure</span></td><td>Returns Input Module 1 or 2 depending on whether the Select Module value is above the threshold; optional interpolated falloff (circular, exponential, sine, step, linear).</td></tr>
+      <tr><td class="node">Create 3Select Module</td><td><span class="tag pure">Pure</span></td><td>Returns Input Module 1, 2 or 3 depending on the Select Module value against the upper and lower thresholds.</td></tr>
+      <tr><td class="node">Create Blend Module</td><td><span class="tag pure">Pure</span></td><td>Lerps between two inputs using the Select Module value (mapped from -1..1 to 0..1), optionally reshaped by a float curve.</td></tr>
+      <tr><td class="node">Create Add Module</td><td><span class="tag pure">Pure</span></td><td>Adds two inputs; with an optional Mask Module the sum is scaled by the mask where the mask is at or above the threshold, otherwise Input Module 1 is returned.</td></tr>
+      <tr><td class="node">Create Scale Bias Module</td><td><span class="tag pure">Pure</span></td><td>Multiplies the input by Scale and adds Bias.</td></tr>
+      <tr><td class="node">Create Warp Module</td><td><span class="tag pure">Pure</span></td><td>Domain-warps the input module using a warp module, with one or two warp iterations and a multiplier.</td></tr>
+      <tr><td class="node">Create Constant Module</td><td><span class="tag pure">Pure</span></td><td>Returns a constant value everywhere.</td></tr>
+      <tr><td class="node">Create Radial Module</td><td><span class="tag pure">Pure</span></td><td>Switches between two inputs by distance from an origin and radius, with optional interpolated falloff.</td></tr>
+      <tr><td class="node">Create Shore Filter Module</td><td><span class="tag pure">Pure</span></td><td>Flattens 2D values that fall within a threshold around a shore height (2D only).</td></tr>
+      <tr><td class="node">Create Spline Generator</td><td><span class="tag pure">Pure</span></td><td>Distance field from an array of spline components between a minimum and maximum distance, optionally reshaped by a float curve.</td></tr>
+    </tbody></table></div>
+    </section>
+    <section id="sampling"><h2>Sampling</h2>
+      <p>Functions on every NoiseKit object.</p>
+    <div class="tbl-wrap"><table class="t"><thead><tr><th>Node</th><th>Type</th><th>Description</th></tr></thead><tbody>
+      <tr><td class="node">Get Noise 2D</td><td><span class="tag call">Callable</span></td><td>Samples the module at X, Y. Call it on the last module of your graph.</td></tr>
+      <tr><td class="node">Get Noise 3D</td><td><span class="tag call">Callable</span></td><td>Samples the module at X, Y, Z. The shore filter module is 2D-only and returns -1 here.</td></tr>
+      <tr><td class="node">Add Spline</td><td><span class="tag call">Callable</span></td><td>Spline generator only: adds a spline component to the distance field.</td></tr>
+    </tbody></table></div>
+    </section>
+    <section id="classes"><h2>Classes</h2>
+<div class="tbl-wrap"><table class="t"><thead><tr><th>Class</th><th>Type</th><th>Description</th></tr></thead><tbody>
+      <tr><td class="node">UNoiseKitNoiseGenerator</td><td><span class="tag cls">Class</span></td><td>Base class of every module; returned by all factory nodes. Implements Get Noise 2D / Get Noise 3D. Module <code>NoiseKitFastNoise</code>.</td></tr>
+      <tr><td class="node">UNoiseKitCoreNoise</td><td><span class="tag cls">Class</span></td><td>Core generator created by the Create * Noise Generator nodes. Module <code>NoiseKitFastNoise</code>.</td></tr>
+      <tr><td class="node">UNoiseKitSelectModule / UNoiseKit3SelectModule / UNoiseKitBlendModule / UNoiseKitAddModule</td><td><span class="tag cls">Class</span></td><td>Combination modules.</td></tr>
+      <tr><td class="node">UNoiseKitScaleBiasModule / UNoiseKitWarpModule / UNoiseKitConstantModule</td><td><span class="tag cls">Class</span></td><td>Shaping modules.</td></tr>
+      <tr><td class="node">UNoiseKitRadialModule / UNoiseKitShoreFilterModule / UNoiseKitSplineGenerator</td><td><span class="tag cls">Class</span></td><td>Spatial modules.</td></tr>
+      <tr><td class="node">UNoiseKitBlueprintFunctionLibrary</td><td><span class="tag cls">Class</span></td><td>Static factory functions behind the Create nodes.</td></tr>
+    </tbody></table></div>
+    </section>
+    <section id="enums"><h2>Enums</h2>
+<div class="tbl-wrap"><table class="t"><thead><tr><th>Enum</th><th>Type</th><th>Values</th></tr></thead><tbody>
+      <tr><td class="node">ENoiseKitNoiseType</td><td><span class="tag cls">Enum</span></td><td>Value, Value Fractal, Gradient, Gradient Fractal, Simplex, Simplex Fractal, Cellular, White Noise.</td></tr>
+      <tr><td class="node">ENoiseKitSimpleNoiseType</td><td><span class="tag cls">Enum</span></td><td>Value, Gradient, Simplex, White Noise.</td></tr>
+      <tr><td class="node">ENoiseKitFractalNoiseType</td><td><span class="tag cls">Enum</span></td><td>Value, Gradient, Simplex.</td></tr>
+      <tr><td class="node">ENoiseKitFractalType</td><td><span class="tag cls">Enum</span></td><td>FBM, Billow, Rigid Multi.</td></tr>
+      <tr><td class="node">ENoiseKitInterp</td><td><span class="tag cls">Enum</span></td><td>Linear, Hermite, Quintic.</td></tr>
+      <tr><td class="node">ENoiseKitCellularDistanceFunction</td><td><span class="tag cls">Enum</span></td><td>Euclidean, Manhattan, Natural.</td></tr>
+      <tr><td class="node">ENoiseKitCellularReturnType</td><td><span class="tag cls">Enum</span></td><td>Cell Value, Noise Lookup, Distance, Distance 2, Distance 2 Add, Distance 2 Sub, Distance 2 Mul, Distance 2 Div.</td></tr>
+      <tr><td class="node">ENoiseKitPositionWarpType</td><td><span class="tag cls">Enum</span></td><td>None, Regular, Fractal.</td></tr>
+      <tr><td class="node">ENoiseKitSelectInterpType</td><td><span class="tag cls">Enum</span></td><td>None, Circular In/Out/In Out, Exponential In/Out/In Out, Sine In/Out/In Out, Step, Linear.</td></tr>
+      <tr><td class="node">ENoiseKitWarpIterations</td><td><span class="tag cls">Enum</span></td><td>One, Two.</td></tr>
+    </tbody></table></div>
+    </section>
+    <section id="cpp"><h2>C++ core generator API</h2>
+      <p>Additional functions on <code>UNoiseKitCoreNoise</code> (C++ only). Cast a generator returned by the core factories to <code>UNoiseKitCoreNoise</code> to tune it after creation.</p>
+    <div class="tbl-wrap"><table class="t"><thead><tr><th>Function</th><th>Type</th><th>Description</th></tr></thead><tbody>
+      <tr><td class="node">SetSeed / GetSeed</td><td><span class="tag cls">C++</span></td><td>Seed used by every noise type (default 1337).</td></tr>
+      <tr><td class="node">SetFrequency</td><td><span class="tag cls">C++</span></td><td>Frequency for all noise types (default 0.01 on a directly constructed object; the factory nodes pass their own).</td></tr>
+      <tr><td class="node">SetNoiseType</td><td><span class="tag cls">C++</span></td><td>Selects the <code>ENoiseKitNoiseType</code> returned by Get Noise 2D / 3D.</td></tr>
+      <tr><td class="node">SetInterp</td><td><span class="tag cls">C++</span></td><td>Linear, Hermite or Quintic smoothing for value and gradient noise and position warping.</td></tr>
+      <tr><td class="node">SetFractalOctaves / SetFractalLacunarity / SetFractalGain / SetFractalType</td><td><span class="tag cls">C++</span></td><td>Fractal layering parameters.</td></tr>
+      <tr><td class="node">SetCellularDistanceFunction / SetCellularReturnType</td><td><span class="tag cls">C++</span></td><td>Cellular noise distance metric and output.</td></tr>
+      <tr><td class="node">SetCellularNoiseLookup</td><td><span class="tag cls">C++</span></td><td>Generator sampled per cell when the cellular return type is Noise Lookup (C++ only).</td></tr>
+      <tr><td class="node">SetPositionWarpAmp / SetPositionWarpType</td><td><span class="tag cls">C++</span></td><td>Built-in position warping (None, Regular, Fractal) applied by Get Noise 2D / 3D.</td></tr>
+      <tr><td class="node">GetNoise2DDeriv</td><td><span class="tag cls">C++</span></td><td>Returns the 2D value plus its analytic X/Y derivative as an <code>FVector</code>.</td></tr>
+      <tr><td class="node">GetValue / GetGradient / GetSimplex / GetCellular / GetWhiteNoise</td><td><span class="tag cls">C++</span></td><td>Direct access to individual noise functions (2D and 3D overloads; 4D for simplex and white noise).</td></tr>
+    </tbody></table></div>
+    </section>
+    <section id="troubleshooting"><h2>Troubleshooting</h2><div class="tbl-wrap"><table class="t"><thead><tr><th>Symptom</th><th>Cause and fix</th></tr></thead><tbody>
+      <tr><td>A combination node returns None</td><td>Select, 3 Select, Blend, Add, Scale Bias, Warp, Radial and Shore Filter need their input modules (and an outer object). Connect every required input before calling the node.</td></tr>
+      <tr><td>The noise stops working after a while</td><td>Generators are UObjects. Store the result in a variable (Blueprint) or a <code>UPROPERTY()</code> member (C++) so the garbage collector keeps it.</td></tr>
+      <tr><td>The output looks flat or like static</td><td>Frequency is too low or too high for your coordinate scale (Unreal units are centimetres). <span class="node">Create Noise Generator</span> defaults to 0.001, the simple, fractal and cellular nodes to 0.1.</td></tr>
+      <tr><td>Assertion or crash when the cellular return type is Noise Lookup</td><td>Noise Lookup needs a lookup generator assigned in C++ with <code>SetCellularNoiseLookup</code>. In Blueprint use one of the other return types.</td></tr>
+      <tr><td>Shore filter returns -1</td><td>The shore filter only works in 2D. Sample it with <span class="node">Get Noise 2D</span>.</td></tr>
+      <tr><td>Spline generator returns 1 everywhere</td><td>No spline is registered or all points are beyond the maximum distance. Pass splines to <span class="node">Create Spline Generator</span> or call <span class="node">Add Spline</span>.</td></tr>
+      <tr><td>Same seed gives slightly different noise on another platform</td><td>The seed permutation uses the platform's C++ standard library random distribution. Results are stable on one platform and compiler.</td></tr>
+    </tbody></table></div></section>
+    <section id="credits"><h2>Credits</h2><p>&copy; 2026 <strong>Alpha XP</strong> &mdash; <a href="https://alphaxp.net/">alphaxp.net</a> &middot; Support: <a href="mailto:support@alphaxp.net">support@alphaxp.net</a>.
+Built and verified for Unreal Engine 4.27 and 5.8.</p></section>
+  </main>
+</div>
+</div>
+
+<footer>NoiseKit &middot; &copy; 2026 Alpha XP &mdash; <a href="https://alphaxp.net/">alphaxp.net</a> &middot; UE 4.27 &amp; 5.8</footer>
+</body>
+</html>
